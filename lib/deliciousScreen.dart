@@ -13,10 +13,47 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
 
   TextEditingController controller=TextEditingController();
   Lista lista= Lista();
+  List sugestoes = [];
+  FocusNode focusNode = FocusNode();
+
+  void atualizarSugestoes(String texto) {
+    final busca = texto.toLowerCase();
+  
+  setState(() {
+    final menuFiltrado = lista.menu.where((item) =>
+        item["description"].toString().toLowerCase().contains(busca) ||
+        item["category"].toString().toLowerCase().contains(busca)
+    ).toList();
+
+    final restauranteFiltrado = lista.restaurante.where((item) =>
+        item["name"].toString().toLowerCase().contains(busca) ||
+        item["category"].toString().toLowerCase().contains(busca)
+    ).toList();
+
+    menuFiltrado.shuffle();
+    restauranteFiltrado.shuffle(); //Pega valores aleatório
+
+    sugestoes = [      
+      ...menuFiltrado.take(1), //Pega o primeiro valor só 1 porque está com valor 1
+      ...restauranteFiltrado.take(1),
+    ];
+  });
+}
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(   //Para fechar a sugestão quando clicar fora.
+    onTap: () {
+     FocusScope.of(context).unfocus(); // tira o foco do TextField
+
+     setState(() {
+      sugestoes.clear(); // fecha sugestões
+       });
+      }, 
+    
+    
+    
+      child:Scaffold(
 
       appBar: AppBar(
         title: const Text("Max Foods",
@@ -32,17 +69,22 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
            children: [
           Padding(
            padding: const EdgeInsets.all(16.0),
-          child:Row(
+           child:Column(children:[   //Collumn criado para agregar o if
+          Row(
             children:[
+              
               Expanded(
             child:TextField(
+              focusNode: focusNode,  //trabalha o foco
               controller: controller,
+              onChanged: atualizarSugestoes, //atualiza a sugestão
          decoration: InputDecoration(
          labelText: 'Digite a sua busca',
          border: OutlineInputBorder(),
          prefixIcon: Icon(Icons.search),
          ),
          ),),
+
          SizedBox(width: 10),
 
           ElevatedButton(
@@ -58,7 +100,36 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
           child: Text('Buscar'),
           ),
          ]
-         ),),
+         ),
+         
+         //Lista de sugestões ao digitar.
+        if (sugestoes.isNotEmpty)
+    ListView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: sugestoes.length,
+    itemBuilder: (context, index) {
+      return ListTile(
+        leading: const Icon(Icons.search),
+        title: Text(sugestoes[index]["description"] ?? sugestoes[index]["name"] ?? sugestoes[index]["category"]),
+        onTap: () {
+          controller.text = sugestoes[index]["description"] ?? sugestoes[index]["name"] ?? sugestoes[index]["category"];
+          
+          setState(() {
+            sugestoes.clear();
+          });
+        },
+      );
+    },
+  ),
+           ]),
+         
+         
+         
+         
+         
+         
+         ),
          SizedBox(height:10),
          Padding(
            padding: const EdgeInsets.all(16.0),
@@ -70,8 +141,8 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
             Column(children:[
               Image.asset(
                'images/icones/1.png',
-               width: 60,
-               height: 60,
+               width: 35,
+               height: 35,
                fit: BoxFit.cover,
                
                 ),
@@ -80,8 +151,8 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
            Column(children:[
               Image.asset(
                'images/icones/2.png',
-               width: 60,
-               height: 60,
+               width: 35,
+               height: 35,
                 fit: BoxFit.cover,
                
                 ),
@@ -90,8 +161,8 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
            Column(children:[
               Image.asset(
                'images/icones/3.png',
-               width: 60,
-               height: 60,
+               width: 35,
+               height: 35,
                 fit: BoxFit.cover,
               
                 ),
@@ -100,8 +171,8 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
            Column(children:[
               Image.asset(
                'images/icones/4.png',
-               width: 60,
-               height: 60,
+               width: 35,
+               height: 35,
                 fit: BoxFit.cover,
               
                 ),
@@ -254,10 +325,11 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
             lista.restaurante[index]["name"],
             style: const TextStyle(
               fontWeight: FontWeight.bold,
+               fontSize: 14,
             ),
           ),
           subtitle: Text(
-            lista.restaurante[index]["description"],
+            lista.restaurante[index]["distance"],
           ),
           trailing: const Icon(Icons.arrow_forward_ios),
         ),
@@ -269,7 +341,7 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
 
       ] 
       )
-         
+      ) 
       );
   }
 }
