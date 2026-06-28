@@ -27,7 +27,8 @@ class _PasswordresetModalState extends State<Endereco> {
     carregarEndereco();
   }
 
-  Future<void> carregarEndereco() async {    //Para recuperar o valor de endereço
+  //Para recuperar o valor de endereço
+  Future<void> carregarEndereco() async {    
   User? user = FirebaseAuth.instance.currentUser;
 
   if (user == null) {
@@ -49,8 +50,8 @@ class _PasswordresetModalState extends State<Endereco> {
   }
 }
   
-
-  Future<void> salvarEndereco() async {          //Salvar endereço.
+  //Salvar endereço.
+  Future<void> salvarEndereco() async {          
   String endereco = _enderecoController.text.trim();
   User? user = FirebaseAuth.instance.currentUser;
 

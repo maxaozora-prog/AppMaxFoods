@@ -170,6 +170,11 @@ void atualizarSugestoes(String texto) {
            if (controller.text.isNotEmpty)
            buscar();
            
+            FocusScope.of(context).unfocus(); // tira o foco do TextField
+
+            setState(() {
+            sugestoes.clear(); // fecha sugestões
+            });
           },
           style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
