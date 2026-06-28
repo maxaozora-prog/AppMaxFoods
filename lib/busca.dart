@@ -172,6 +172,9 @@ void atualizarSugestoes(String texto) {
            
             FocusScope.of(context).unfocus(); // tira o foco do TextField
 
+            FocusManager.instance.primaryFocus?.unfocus(); // Faz a mesma coisa caso o de cima não resolva
+
+
             setState(() {
             sugestoes.clear(); // fecha sugestões
             });
@@ -300,6 +303,7 @@ void atualizarSugestoes(String texto) {
    @override
   void dispose() {
     controller.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 }

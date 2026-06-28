@@ -90,7 +90,17 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
           ElevatedButton(
           onPressed: () {
             if (controller.text.isNotEmpty)
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>Busca(dado: controller.text)));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Busca(dado: controller.text)));
+          
+            setState(() {
+            sugestoes.clear(); // fecha sugestões
+            
+            });
+
+             FocusScope.of(context).unfocus(); // tira o foco do TextField
+             FocusManager.instance.primaryFocus?.unfocus(); // Faz a mesma coisa caso o de cima não resolva
+
+          
           },
           style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -344,4 +354,11 @@ class _DeliciousScreenState extends State<DeliciousScreen> {
       ) 
       );
   }
+
+  @override
+  void dispose() {
+  controller.dispose();
+  focusNode.dispose(); 
+  super.dispose();
+}
 }

@@ -60,7 +60,7 @@
       "image": "images/pão/1.jpg",
       "price": 6.99,
       "description": "Croissant",
-      "category": "pão"
+      "category": "pao"
     },
     {
       "image": "images/pizza/2.jpg",
@@ -114,7 +114,7 @@
       "Image": "images/icones/bread.png",
       "name": "Padaria irmãos dez",
       "distance": "0.2Km Frete Gratis",
-      "category": "pão"
+      "category": "pao"
     },
       {
       "Image": "images/icones/uramaki.png",
